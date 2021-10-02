@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Services;
 
 class FireService extends Service
 {
@@ -17,6 +17,12 @@ class FireService extends Service
     public function index()
     {
         $this->fire->paginate(10);
+    }
+
+    public function updateDatabase()
+    {
+        $database = [ ["rapaz"], ["rapaz2"], ["rapaz4"] ];
+        return $database;
     }
 
     //

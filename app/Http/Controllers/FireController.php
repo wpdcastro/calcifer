@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Fire;
+use Services\FireService;
 
 class FireController extends Controller
 {
@@ -49,7 +50,12 @@ class FireController extends Controller
 
     public function updateDatabase()
     {
-        var $fireDatabase = FireService.chargeDatabaseINPE();
+        $fireDatabase = FireService.updateDatabase();
+
+        foreach($fireData as $fireDatabase)
+        {
+            $this->fire->create($fireData->all());
+        }
 
         $tata = new Fire();
         return $tata;
