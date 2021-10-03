@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
-class FireController extends Controller
+use Services\NotificationService;
+use Illuminate\Http\Request;
+
+class NotificationController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -26,6 +29,8 @@ class FireController extends Controller
 
     public function sendNotification()
     {
-        
+        NotificationService.sendNotification();
+
+        return response()->json(['data' => ['message' => 'Mensagem enviada succefully updated']]);
     }
 }

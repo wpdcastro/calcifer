@@ -32,13 +32,8 @@ class NotificationService extends Service
         // {"type":"User"...'
 
         // Send an asynchronous request.
-        $request = new \GuzzleHttp\Psr7\Request('POST', 'https://api.zenvia.com/v2/channels/sms/messages');
-        $promise = $client->sendAsync($request)
-        ->then(function ($response) {
-            $status = $response->getStatusCode();
-            $body   = $response->getBody();
-        });
-        $promise->wait();
+        // $request = new \GuzzleHttp\Psr7\Request('POST', 'https://api.zenvia.com/v2/channels/sms/messages');
+        $client = new GuzzleHttp\Client();
 
         $json = [
             "from" => "5510999999999",
@@ -46,10 +41,29 @@ class NotificationService extends Service
             "contents" => [
               [
                 "type" => "text",
-                "text" => "Hi Zenvia!"
+                "text" => "Hello World!"
               ]
             ]
         ];
+
+        $json = json_encode($json);
+
+        $res = $client->request('POST', 'https://api.zenvia.com/v2/channels/sms/messages', [
+            'header' => ['X-API-TOKEN' => 'Se_lzbguBhte25FddpKf1dqNb1Mw536ZYG0A'],
+            'body'   => $json
+        ]);
+
+        $promise = $client->sendAsync($res)
+        ->then(function ($response) {
+            $status = $response->getStatusCode();
+            $body   = $response->getBody();
+        });
+        $promise->wait();
+
+        //  /channels/sms/messages
+        //  Se_lzbguBhte25FddpKf1dqNb1Mw536ZYG0A -> token
+
+
 
         return ['status' => $statusCode, 'body' => $body, 'header' => $header];
         //return $database;

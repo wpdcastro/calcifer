@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Fire;
+use App\Model\FireSource;
 use Services\FireSourceService;
 
 class FireSourceController extends Controller

@@ -12,34 +12,32 @@
 | and give it the Closure to call when that URI is requested.
 |
 */
+$router->get('/hello', function () { return 'Hello World'; });
 
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
+/*
 $router->get('/fire', function () use ($router) {
-    return \App\Fire::all();
+    return App\Http\Controllers\FireSourceController::all();
 });
+*/
 
 $router->group(['prefix' => 'fire'], function() use($router) {
-    $router->get("/", "FireController@index");
-    $router->get("/{fire}", "FireController@show");
-
-    $router->delete("/{fire}", "FireController@destroy");
-
-    $router->post("/", "FireController@store");
+    $router->get("/", "FireSourceController@index");
+    $router->get("/{fire}", "FireSourceController@show");
+    $router->delete("/{fire}", "FireSourceController@destroy");
+    $router->post("/", "FireSourceController@store");
 });
 
 $router->group(['prefix' => 'notification'], function() use($router) {
-    $router->get("/", "FireController@index");
-    $router->post("/", "FireController@store");
-    $router->get("/{fire}", "FireController@show");
-    $router->delete("/{fire}", "FireController@destroy");
-    $router->put("/{fire}", "FireController@update");
+    $router->get("/", "NotificationController@sendNotification");
 });
 
 $router->group(['prefix' => 'user'], function() use($router) {
-    $router->post("/", "FireController@store");
-    $router->get("/{user}", "FireController@show");
-    $router->delete("/{user}", "FireController@destroy");
+    $router->post("/", "UserController@store");
+    $router->get("/", "UserController@index");
+    $router->get("/{user}", "UserController@show");
+    $router->delete("/{user}", "UserController@destroy");
 });

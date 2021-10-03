@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Model\User;
 
-class FireController extends Controller
+class UserController extends Controller
 {
     protected $user;
     /**
@@ -27,7 +28,13 @@ class FireController extends Controller
 
     public function destroy($userId)
     {
-        //$userToDestroy = $this->user->find($userId);
-        return $this->user->destroy($userId);
+        $this->user->destroy($userId);
+        return response()->json(['data' => ['message' => 'User removed with success']]);
+    }
+
+    public function store(Request $request)
+    {
+        $this->user->create($request->all());
+        return response()->json(['data' => ['message' => 'User succefully created']]);
     }
 }

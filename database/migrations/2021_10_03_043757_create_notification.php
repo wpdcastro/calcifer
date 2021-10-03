@@ -14,12 +14,12 @@ class CreateNotification extends Migration
     public function up()
     {
         Schema::create('notification', function (Blueprint $table) {
-            $table->bigIncrements("id");
+            $table->bigIncrements("id")->unsigned();
             $table->date("date");
             $table->string("message");
             $table->string("phone_area");
-            $table->integer('fire_source_id')->unsigned();
-            $table->foreign('fire_source_id')->references('id')->on('fire_source');
+            $table->bigInteger('fire_source_id')->unsigned();
+            $table->foreign('fire_source_id')->references('id')->on('fire_source')->onDelete('cascade');
         });
     }
 

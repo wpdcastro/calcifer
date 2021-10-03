@@ -14,7 +14,7 @@ class CreateFireSource extends Migration
     public function up()
     {
         Schema::create('fire_source', function (Blueprint $table) {
-            $table->bigIncrements("id");
+            $table->bigIncrements("id")->unsigned();
             $table->string("latitude");
             $table->string("longitude");
             $table->string("satellite");

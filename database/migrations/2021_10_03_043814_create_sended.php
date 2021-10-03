@@ -14,13 +14,12 @@ class CreateSended extends Migration
     public function up()
     {
         Schema::create('sended', function (Blueprint $table) {
-            $table->bigIncrements("id");
+            $table->bigIncrements("id")->unsigned();;
             $table->date("date");
-            $bp->integer('user_id')->unsigned();
-            $bp->foreign('user_id')->references('id')->on('user');
-            $bp->integer('notification_id')->unsigned();
-            $bp->foreign('notification_id')->references('id')->on('notification');
-            $table->foreign("notification_id");
+            $table->bigInteger('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
+            $table->bigInteger('notification_id')->unsigned();
+            $table->foreign('notification_id')->references('id')->on('notification')->onDelete('cascade');
         });
     }
 
