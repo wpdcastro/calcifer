@@ -158,8 +158,8 @@ class NotificationController extends BaseController
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-          // CURLOPT_URL => 'http://api.positionstack.com/v1/reverse?access_key=0a771a096c4209bd2634d592039a8b86&query='.$lat','.$lon,
-          CURLOPT_URL => 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.$lat','.$lon'&key=AIzaSyA07miAu93FuKtizjKJw0pmgphaHk1JBQo',
+          // CURLOPT_URL => 'http://api.positionstack.com/v1/reverse?access_key=0a771a096c4209bd2634d592039a8b86&query='.$lat.','.$lon,
+          CURLOPT_URL => 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.$lat.','.$lon'&key=AIzaSyA07miAu93FuKtizjKJw0pmgphaHk1JBQo',
           CURLOPT_RETURNTRANSFER => true,
           CURLOPT_ENCODING => '',
           CURLOPT_MAXREDIRS => 10,
