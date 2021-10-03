@@ -34,56 +34,79 @@ class NotificationController extends BaseController
 
     public function sendNotification()
     {
-        $client = new GuzzleHttp();
+        // $client = new GuzzleHttp();
 
         $json = [
-            "from" => "5514996677641", // 5514996677641
+            "from" => "5510999999999", // 5514996677641
             "to" => "5514996677641",
             "contents" => [ 
-                json_encode(
+                
                 [
                     "type" => "text",
                     "text" => "Hello World!"
                 ]
-                )
+                
             ]
         ];
 
-        /*
-        body: {
-            from: 'sender-identifier',
-            to: 'recipient-identifier',
-            contents: [{
-              type: 'text',
-              text: 'Some text message'
-            }]
-          },
-          */
+        // /*
+        // body: {
+        //     from: 'sender-identifier',
+        //     to: 'recipient-identifier',
+        //     contents: [{
+        //       type: 'text',
+        //       text: 'Some text message'
+        //     }]
+        //   },
+        //   */
 
-        $json = json_encode($json);
+        // $json = json_encode($json);
 
-        $res = $client->request('POST', 'https://api.zenvia.com/v2/channels/sms/messages', [
-            'headers' => [
-                'X-API-TOKEN' => 'Se_lzbguBhte25FddpKf1dqNb1Mw536ZYG0A'
-            ],
-            'body' =>  $json
-        ]);
+        // $res = $client->request('POST', 'https://api.zenvia.com/v2/channels/sms/messages', [
+        //     'headers' => [
+        //         'X-API-TOKEN' => 'Se_lzbguBhte25FddpKf1dqNb1Mw536ZYG0A'
+        //     ],
+        //     'body' =>  $json
+        // ]);
 
-        $statusCode = $res->getStatusCode();          // "200"
-        $header = $res->getHeader('content-type')[0]; // 'application/json; charset=utf8'
-        $body = $res->getBody();                      // {"type":"User"...'
+        // $statusCode = $res->getStatusCode();          // "200"
+        // $header = $res->getHeader('content-type')[0]; // 'application/json; charset=utf8'
+        // $body = $res->getBody();                      // {"type":"User"...'
 
-        $promise = $client->sendAsync($res)
-        ->then(function ($response) {
-            $status = $response->getStatusCode();
-            $body   = $response->getBody();
-        });
-        $promise->wait();
+        // $promise = $client->sendAsync($res)
+        // ->then(function ($response) {
+        //     $status = $response->getStatusCode();
+        //     $body   = $response->getBody();
+        // });
+        // $promise->wait();
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => 'https://api.zenvia.com/v2/channels/sms/messages',
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'POST',
+          CURLOPT_POSTFIELDS => json_encode($json),
+          CURLOPT_HTTPHEADER => array(
+            'X-API-TOKEN: Se_lzbguBhte25FddpKf1dqNb1Mw536ZYG0A',
+            'Content-Type: application/json'
+          ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        echo $response;
 
         return response()->json(['data' => ['message' => 'Mensagem enviada succefully updated']]);
     }
 
-     function grapCsvFiles(){
+    public function grapCsvFiles(){
 
         $destination = 'public/listFoc/';
 
@@ -122,20 +145,20 @@ class NotificationController extends BaseController
         }
  
         if(true){
-            return response()->json(['data' => ['message' => 'Ok']]);
+            //return response()->json(['data' => ['message' => 'Mensagem enviada succefully updated']]);
         }
     }
 
-    function readFiles($data){
+    public function readFiles($data){
 
       //necessario passar somente um arquivo por vez.. pelo $data 
-         // $directoryFiles = 'listFoc/';
+         $directoryFiles = 'listFoc/';
 
-         // $fileNames = scandir($directoryFiles);
-         // foreach ($fileNames as $key => $names) {
+         $fileNames = scandir($directoryFiles);
+         foreach ($fileNames as $key => $names) {
 
-         //     if($key != 0 && $key != 1){
-         //         $fileDirectory = $directoryFiles.$names;
+             if($key != 0 && $key != 1){
+                 $fileDirectory = $directoryFiles.$names;
                  $handle = fopen($fileDirectory, "r");
                  $row = 0;
                  while ($line = fgetcsv($handle, 1000, ",")) {
@@ -152,14 +175,17 @@ class NotificationController extends BaseController
                  }
                  fclose($handle);
                  $result = $handle;
-             // }
+             }
          }
 
-         return response()->json(['data' => ['message' => 'ok', 'info' => $result]]);
+        return response()->json(['data' => ['message' => 'succefully', 'info' => $result]]);
     }
 
-    function grapLocation($lat, $lon)
+    public function grapLocation()
     {
+        $lat = '-22.2180531';
+        $lon = '-49.9458418';
+
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
@@ -177,7 +203,42 @@ class NotificationController extends BaseController
         $response = curl_exec($curl);
 
         $apiResult = json_decode($response, true);
+        // print('<pre>');
+        // print_r();exit;
+        $cep = str_replace("-","",$apiResult['results'][0]['address_components'][6]['short_name']);
 
-        return response()->json(['data' => ['message' => 'Ok', 'info' => $apiResult]]);
+        $DDD = $this->grapDDD($cep);
+
+        $list = ['pais' => $apiResult['results'][0]['address_components'][5]['short_name'],
+            'cep' => $DDD['cep'],
+                'localidade' => $DDD['localidade'],
+                'uf' => $DDD['uf'], 
+                'ddd' => $DDD['ddd']];
+
+        return response()->json(['data' => ['message' => 'succefully', 'info' => $list]]);
+    }
+
+
+    public function grapDDD($cep)
+    {
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => 'https://viacep.com.br/ws/'.$cep.'/json/',
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'GET',
+        ));
+
+        $response = curl_exec($curl);
+
+        $apiResult = json_decode($response, true);
+
+        return $apiResult;
     }
 }

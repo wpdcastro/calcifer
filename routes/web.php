@@ -34,6 +34,7 @@ $router->group(['prefix' => 'fire'], function() use($router) {
 
 $router->group(['prefix' => 'notification'], function() use($router) {
     $router->get("/", "NotificationController@sendNotification");
+    $router->get("/location", "NotificationController@grapLocation");
 });
 
 $router->group(['prefix' => 'user'], function() use($router) {
