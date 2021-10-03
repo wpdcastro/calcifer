@@ -38,12 +38,12 @@ class NotificationController extends BaseController
 
         $json = [
             "from" => "5510999999999", // 5514996677641
-            "to" => "5514996677641",
+            "to" => "5514998095537",
             "contents" => [ 
                 
                 [
                     "type" => "text",
-                    "text" => "Hello World!"
+                    "text" => "Olá Will, Existem focos de incêndio nas proximidades, mantenha-se seguro!"
                 ]
                 
             ]
