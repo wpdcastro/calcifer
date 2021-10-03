@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 use App\Models\Notification;
 use Laravel\Lumen\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Services\NotificationService;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client as GuzzleHttp;
+
 
 class NotificationController extends BaseController
 {
@@ -81,45 +83,48 @@ class NotificationController extends BaseController
         return response()->json(['data' => ['message' => 'Mensagem enviada succefully updated']]);
     }
 
-
      function grapCsvFiles(){
-         $destination = './listFoc/';
-         $ctx = stream_context_create();
-         $arrContextOptions=array(
+
+        $destination = 'public/listFoc/';
+
+        $ctx = stream_context_create();
+
+        $arrContextOptions=array(
                "ssl"=>array(
                      "verify_peer"=>false,
                      "verify_peer_name"=>false,
-                 ),
+                ),
                'http' => array( 
                    'header' => array( 
-                       "Authorization: Basic ZGFkb3NfYWJlcnRvczpkYWRvc19hYmVydG9z" 
-                       ) 
-                   ),
-             );  
+                      "Authorization: Basic ZGFkb3NfYWJlcnRvczpkYWRvc19hYmVydG9z" 
+                      ) 
+                  ),
+            );  
 
-         $html = file_get_contents("http://queimadas.dgi.inpe.br/queimadas/users/dados_abertos/focos/10min/",false, stream_context_create($arrContextOptions));
+        $html = file_get_contents("http://queimadas.dgi.inpe.br/queimadas/users/dados_abertos/focos/10min/",false, stream_context_create($arrContextOptions));
 
 
-         $count = preg_match_all('/<td><a href="([^"]+)">[^<]*<\/a><\/td>/i', $html, $files);
-            for ($i = 0; $i < $count; ++$i) {
-              $files[1][$i];
-            }
+        $count = preg_match_all('/<td><a href="([^"]+)">[^<]*<\/a><\/td>/i', $html, $files);
 
-            foreach ($files[1] as $key => $value) {
+        for ($i = 0; $i < $count; ++$i) {
+          $files[1][$i];
+        }
 
-             if($key != 0){
+        foreach ($files[1] as $key => $value) {
+
+            if($key != 0){
                  // print_r("http://queimadas.dgi.inpe.br/queimadas/users/dados_abertos/focos/10min/".$value);exit;
-                 $file = file_get_contents("http://queimadas.dgi.inpe.br/queimadas/users/dados_abertos/focos/10min/".$value,false, stream_context_create($arrContextOptions));
+                $file = file_get_contents("http://queimadas.dgi.inpe.br/queimadas/users/dados_abertos/focos/10min/".$value,false, stream_context_create($arrContextOptions));
                  
-                 $fileSave = file_put_contents( $destination.$value, $file);
-
-             }
-
+                // $fileSave = file_put_contents( $destination.$value, $file);
+                $fileSave = Storage::disk('local')->put($value, $file);
             }
-
-         return response()->json(['data' => ['message' => 'Ok']]);
-
-     }
+        }
+ 
+        if(true){
+            return response()->json(['data' => ['message' => 'Ok']]);
+        }
+    }
 
     function readFiles($data){
 
@@ -159,7 +164,7 @@ class NotificationController extends BaseController
 
         curl_setopt_array($curl, array(
           // CURLOPT_URL => 'http://api.positionstack.com/v1/reverse?access_key=0a771a096c4209bd2634d592039a8b86&query='.$lat.','.$lon,
-          CURLOPT_URL => 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.$lat.','.$lon'&key=AIzaSyA07miAu93FuKtizjKJw0pmgphaHk1JBQo',
+          CURLOPT_URL => 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.$lat.','.$lon.'&key=AIzaSyA07miAu93FuKtizjKJw0pmgphaHk1JBQo',
           CURLOPT_RETURNTRANSFER => true,
           CURLOPT_ENCODING => '',
           CURLOPT_MAXREDIRS => 10,
@@ -173,6 +178,6 @@ class NotificationController extends BaseController
 
         $apiResult = json_decode($response, true);
 
-        return response()->json(['data' => ['message' => 'Mensagem enviada succefully updated', 'info' => $apiResult]]);
+        return response()->json(['data' => ['message' => 'Ok', 'info' => $apiResult]]);
     }
 }
