@@ -1,6 +1,7 @@
 <?php
 
 /** @var \Laravel\Lumen\Routing\Router $router */
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +38,7 @@ $router->group(['prefix' => 'notification'], function() use($router) {
 
 $router->group(['prefix' => 'user'], function() use($router) {
     $router->post("/", "UserController@store");
+    // $router->get("/", [UserController::class,'index']);
     $router->get("/", "UserController@index");
     $router->get("/{user}", "UserController@show");
     $router->delete("/{user}", "UserController@destroy");

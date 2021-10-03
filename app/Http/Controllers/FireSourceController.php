@@ -1,12 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\FireSource;
+use Laravel\Lumen\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
-use App\Model\FireSource;
-use Services\FireSourceService;
+use App\Services\FireSourceService;
 
-class FireSourceController extends Controller
+class FireSourceController extends BaseController
 {
     private $fire;
     /**

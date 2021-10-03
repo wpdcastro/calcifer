@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Model\User;
+use App\Models\User;
+use Laravel\Lumen\Routing\Controller as BaseController;
 
-class UserController extends Controller
+class UserController extends BaseController
 {
     protected $user;
     /**
