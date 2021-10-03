@@ -35,23 +35,36 @@ class NotificationController extends BaseController
         $client = new GuzzleHttp();
 
         $json = [
-            "from" => "5510999999999",
+            "from" => "5514996677641", // 5514996677641
             "to" => "5514996677641",
-            "contents" => [
-              [
-                "type" => "text",
-                "text" => "Hello World!"
-              ]
+            "contents" => [ 
+                json_encode(
+                [
+                    "type" => "text",
+                    "text" => "Hello World!"
+                ]
+                )
             ]
         ];
 
+        /*
+        body: {
+            from: 'sender-identifier',
+            to: 'recipient-identifier',
+            contents: [{
+              type: 'text',
+              text: 'Some text message'
+            }]
+          },
+          */
+
         $json = json_encode($json);
 
-       // X-API-TOKEN: hKp94crjv9OF3UGrCpSXUJw1-UYHhRvLKNLt
-//Se_
         $res = $client->request('POST', 'https://api.zenvia.com/v2/channels/sms/messages', [
-            'header' => json_encode(['X-API-TOKEN' => 'Se_lzbguBhte25FddpKf1dqNb1Mw536ZYG0A']),
-            'body'   => $json
+            'headers' => [
+                'X-API-TOKEN' => 'Se_lzbguBhte25FddpKf1dqNb1Mw536ZYG0A'
+            ],
+            'body' =>  $json
         ]);
 
         $statusCode = $res->getStatusCode();          // "200"
