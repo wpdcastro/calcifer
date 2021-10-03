@@ -1,5 +1,8 @@
 
-API do projeto infochama
+API do projeto INFOCHAMAS
+
+nome de desenvolvimento [calcifer]
+nome do projeto [infochamas]
 
 Api produzida durante o Hackaton Nasa Space Apps
 
