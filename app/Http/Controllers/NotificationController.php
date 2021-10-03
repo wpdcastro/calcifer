@@ -38,7 +38,7 @@ class NotificationController extends BaseController
 
         $json = [
             "from" => "5510999999999", // 5514996677641
-            "to" => "5514998095537",
+            "to" => "5514996677641",
             "contents" => [ 
                 
                 [
@@ -105,9 +105,11 @@ class NotificationController extends BaseController
 
         return response()->json(['data' => ['message' => 'Mensagem enviada succefully updated']]);
     }
-
+    /* Essa função grapCsvFiles() deve ser rodada em rotina a cada 30 min...
+       A lista de arquivos é extensa, isso levara em torno de 2 min's para o download completo. 
+    */
     public function grapCsvFiles(){
-
+        
         $destination = 'public/listFoc/';
 
         $ctx = stream_context_create();
@@ -159,6 +161,12 @@ class NotificationController extends BaseController
 
              if($key != 0 && $key != 1){
                  $fileDirectory = $directoryFiles.$names;
+
+                 /*=========================================================================
+                 Somente este trecho deverá se manter nessa função, 
+                 o foreach deverá ser passado para o trecho onde a readFiles() será chamada passando por parametro o diretorio completo exemplo "listFoc/noma_file.csv".
+                 Isso para que não seja carregado sempre todos os arquivos de uma só vez.
+                 */
                  $handle = fopen($fileDirectory, "r");
                  $row = 0;
                  while ($line = fgetcsv($handle, 1000, ",")) {
@@ -175,6 +183,9 @@ class NotificationController extends BaseController
                  }
                  fclose($handle);
                  $result = $handle;
+                 /* FIM do trecho 
+                 =========================================================================*/
+
              }
          }
 
@@ -203,8 +214,7 @@ class NotificationController extends BaseController
         $response = curl_exec($curl);
 
         $apiResult = json_decode($response, true);
-        // print('<pre>');
-        // print_r();exit;
+
         $cep = str_replace("-","",$apiResult['results'][0]['address_components'][6]['short_name']);
 
         $DDD = $this->grapDDD($cep);
@@ -217,7 +227,6 @@ class NotificationController extends BaseController
 
         return response()->json(['data' => ['message' => 'succefully', 'info' => $list]]);
     }
-
 
     public function grapDDD($cep)
     {
@@ -242,3 +251,15 @@ class NotificationController extends BaseController
         return $apiResult;
     }
 }
+
+/*====================================================
+    
+    Pendente:
+
+    - Gravar usuario por meio da tela de cadastro.
+    - Incluir gravar dados de focus na função readFiles().
+    - Criar rotina de execução de grapCsvFiles().
+    - Criar função para chamar readFiles(), para cada localização de focos, buscar usuario cadastrado na região proxima e Enviar notificação sendNotification.
+    - Incluir tratar erros em todas as funções.
+
+=====================================================*/
