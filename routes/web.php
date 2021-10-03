@@ -30,10 +30,16 @@ $router->group(['prefix' => 'fire'], function() use($router) {
     $router->post("/", "FireController@store");
 });
 
-$router->group(['prefix' => 'notification'], function() use($route) {
-    $route->get("/", "FireController@index");
-    $route->post("/", "FireController@store");
-    $route->get("/{fire}", "FireController@show");
-    $route->delete("/{fire}", "FireController@destroy");
-    $route->put("/{fire}", "FireController@update");
+$router->group(['prefix' => 'notification'], function() use($router) {
+    $router->get("/", "FireController@index");
+    $router->post("/", "FireController@store");
+    $router->get("/{fire}", "FireController@show");
+    $router->delete("/{fire}", "FireController@destroy");
+    $router->put("/{fire}", "FireController@update");
+});
+
+$router->group(['prefix' => 'user'], function() use($router) {
+    $router->post("/", "FireController@store");
+    $router->get("/{user}", "FireController@show");
+    $router->delete("/{user}", "FireController@destroy");
 });

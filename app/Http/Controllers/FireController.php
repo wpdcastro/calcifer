@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Fire;
-use Services\FireService;
+use Services\FireSourceService;
 
-class FireController extends Controller
+class FireSourceController extends Controller
 {
     private $fire;
     /**
@@ -14,7 +14,7 @@ class FireController extends Controller
      *
      * @return void
      */
-    public function __construct(Fire $fire)
+    public function __construct(FireSource $fire)
     {
         $this->fire = $fire;
     }
@@ -50,14 +50,14 @@ class FireController extends Controller
 
     public function updateDatabase()
     {
-        $fireDatabase = FireService.updateDatabase();
+        $fireDatabase = FireSourceService.updateDatabase();
 
         foreach($fireData as $fireDatabase)
         {
             $this->fire->create($fireData->all());
         }
 
-        $tata = new Fire();
+        $tata = new FireSource();
         return $tata;
         //return store($tata);
     }

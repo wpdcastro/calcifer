@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFire extends Migration
+class CreateFireSource extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateFire extends Migration
      */
     public function up()
     {
-        Schema::create('fire', function (Blueprint $table) {
+        Schema::create('fire_source', function (Blueprint $table) {
             $table->bigIncrements("id");
             $table->string("latitude");
             $table->string("longitude");
+            $table->string("satellite");
             $table->string("city");
             $table->string("state");
             $table->string("country");
@@ -31,6 +32,6 @@ class CreateFire extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('fire');
+        Schema::dropIfExists('fire_source');
     }
 }

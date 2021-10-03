@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSmsSended extends Migration
+class CreateUser extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateSmsSended extends Migration
      */
     public function up()
     {
-        Schema::create('sms_sended', function (Blueprint $table) {
-            $table->id();
-            $table->telephone();
-            $table->notification_id();
-            $table->date_sended();
-            $table->timestamps();
+        Schema::create('user', function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->string("phone_area");
+            $table->string("phone");
+            $table->date("date");
         });
     }
 
@@ -29,6 +28,6 @@ class CreateSmsSended extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sms_sended');
+        Schema::dropIfExists('user');
     }
 }
